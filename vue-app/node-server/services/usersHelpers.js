@@ -16,6 +16,26 @@ function register(body) {
     return addUser(body.username, shaPass)
 }
 
+function login(body) {
+    try {
+        checkCredentialsReq(body)
+    } catch (err) {
+        return err.message
+    }
+
+    if (!userExists(body.username)) {
+        return "Cannot login to non-existing account"
+    }
+    var shaPass = crypto.createHash("sha256").update(body.password).digest("hex")
+    var res = db.query('SELECT password_hash FROM accounts where username = (@username)', {username: body.username})
+    res = Object.values(res[0])[0]
+    // console.log(res, " - ", shaPass, res === shaPass)
+    if (res === shaPass) {
+        return "Correct credentials given - logging in..."
+    }
+    return "Incorrect password to given username"
+}
+
 function checkCredentialsReq(body) {
     if (!body) {
         throw new Error("No request body provided")
@@ -47,5 +67,6 @@ function addUser(username, hashPassword) {
 }
 
 module.exports = {
-    register
+    register,
+    login,
 }
