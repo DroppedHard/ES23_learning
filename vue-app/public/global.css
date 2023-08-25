@@ -44,15 +44,24 @@ form input {
 form button {
   margin-top: 10px;
   border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
   background-color: #42b983;
   transition: 0.25s;
+  border-radius: 25px;
+  padding: 10px 20px;
 }
 form button:hover {
-  background-color: #6ccea2;
+  background-color: rgb(87, 216, 87);
 }
 
 li {
   list-style-type: none;
+}
+
+#card {
+  max-width: 250px;
+  margin: 20px auto 0;
+  color: whitesmoke;
+  background-color: rgb(243, 41, 81);
+  border-radius: 25px;
+  padding: 2px 4px;
 }/*# sourceMappingURL=global.css.map */

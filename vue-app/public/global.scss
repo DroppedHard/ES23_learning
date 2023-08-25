@@ -1,10 +1,20 @@
+$main-color: #42b983;
+$accent-color: rgb(87, 216, 87);
+$warn-color: rgb(243, 41, 81);
+$text-color: #2c3e50;
+
+@mixin bigger-roundy($size) {
+    border-radius: 25px;
+    padding: $size*2px $size*4px;
+}
+
 body {
     margin: 0;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: $text-color;
 }
 // #app {
 // }
@@ -19,12 +29,12 @@ nav {
 
     .links>a {
         font-weight: bold;
-        color: #2c3e50;
+        color: $text-color;
         margin: 0 5px;
         text-decoration: none;
 
         &.router-link-exact-active {
-            color: #42b983;
+            color: $main-color;
         }
     }
 }
@@ -51,13 +61,12 @@ form {
     button {
         margin-top: 10px;
         border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        background-color: #42b983;
+        background-color: $main-color;
         transition: 0.25s;
+        @include bigger-roundy(5);
 
         &:hover {
-            background-color: #6ccea2;
+            background-color: $accent-color;
         }
     }
 }
@@ -67,3 +76,10 @@ li {
     list-style-type: none;
 }
 
+#card {
+    max-width: 250px;
+    margin: 20px auto 0;
+    color: whitesmoke;
+    background-color: $warn-color;
+    @include bigger-roundy(1);
+}

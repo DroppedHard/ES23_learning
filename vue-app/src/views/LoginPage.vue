@@ -16,6 +16,7 @@
       />
       <button>Submit</button>
     </form>
+    <ResponseCard v-if="response" :message="response" />
   </div>
 </template>
 
@@ -23,23 +24,24 @@
 import FormInput from "@/components/FormInput.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import ResponseCard from "@/components/ResponseCard.vue";
 
 export default {
   setup() {
     const userStore = useUserStore();
-    const { username, password, password2 } = storeToRefs(userStore);
+    const { username, password, response } = storeToRefs(userStore);
 
     const submitForm = (e) => {
       e.preventDefault();
-      console.log(username.value, password.value, password2.value);
-      if (password.value === password2.value) {
-        userStore.register();
-      }
+      // console.log(username.value, password.value);
+      userStore.login();
+      // console.log(response.value);
     };
-    return { username, password, submitForm };
+    return { username, password, submitForm, response };
   },
   components: {
     FormInput,
+    ResponseCard,
   },
 };
 </script>

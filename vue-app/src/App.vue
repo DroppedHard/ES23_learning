@@ -19,7 +19,6 @@ export default {
     const userStore = useUserStore();
     const { loggedAs } = storeToRefs(userStore);
     const usernameShowed = computed(() => {
-      console.log(loggedAs.value);
       return loggedAs.value ? loggedAs.value : "No account chosen";
     });
     return { usernameShowed };
