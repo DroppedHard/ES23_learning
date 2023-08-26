@@ -25,16 +25,24 @@ import FormInput from "@/components/FormInput.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import ResponseCard from "@/components/ResponseCard.vue";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
     const userStore = useUserStore();
+    // userStore.$reset();
+    const router = useRouter();
     const { username, password, response } = storeToRefs(userStore);
-
+    response.value = "";
     const submitForm = (e) => {
       e.preventDefault();
       // console.log(username.value, password.value);
-      userStore.login();
+      userStore.login().then((res) => {
+        if (res === 0) {
+          response.value = "";
+          router.push({ name: "home" });
+        }
+      });
       // console.log(response.value);
     };
     return { username, password, submitForm, response };

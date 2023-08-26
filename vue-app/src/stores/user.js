@@ -9,6 +9,8 @@ export const useUserStore = defineStore("user", {
     loggedAs: null,
     loading: false,
     error: null,
+    timeout: null,
+    code: null,
   }),
   actions: {
     update(field, value) {
@@ -18,7 +20,7 @@ export const useUserStore = defineStore("user", {
     async login() {
       this.loading = true;
       try {
-        this.response = await fetch("http://localhost:3000/users/login", {
+        return fetch("http://localhost:3000/users/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -27,23 +29,28 @@ export const useUserStore = defineStore("user", {
             username: this.username,
             password: this.password,
           }),
-        }).then((res) => {
-          res.json().then((res) => {
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((res) => {
             // console.log(res);
             this.response = res.body;
+            this.code = res.code;
+            return res.code;
           });
-        });
         // console.log(this.response);
       } catch (error) {
         this.error = error;
       } finally {
+        this.startTimeout();
         this.loading = false;
       }
     },
     async register() {
       this.loading = true;
       try {
-        this.response = await fetch("http://localhost:3000/users/register", {
+        return fetch("http://localhost:3000/users/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,18 +59,29 @@ export const useUserStore = defineStore("user", {
             username: this.username,
             password: this.password,
           }),
-        }).then((res) => {
-          res.json().then((res) => {
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((res) => {
             // console.log(res);
             this.response = res.body;
+            this.code = res.code;
+            return res.code;
           });
-        });
         // console.log(this.response);
       } catch (error) {
         this.error = error;
       } finally {
+        this.startTimeout();
         this.loading = false;
       }
+    },
+    startTimeout() {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.response = null;
+      }, 3000);
     },
   },
 });

@@ -76,6 +76,16 @@ li {
     list-style-type: none;
 }
 
+#card-holder {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: aliceblue;
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 50px;
+}
+
 #card {
     max-width: 250px;
     margin: 20px auto 0;

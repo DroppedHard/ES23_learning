@@ -1,7 +1,9 @@
 <template>
-  <div id="card">
-    <p>{{ message }}</p>
-  </div>
+  <teleport to="#card-holder">
+    <div id="card">
+      <p>{{ message }}</p>
+    </div>
+  </teleport>
 </template>
 
 <script>

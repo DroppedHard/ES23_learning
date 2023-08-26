@@ -6,11 +6,11 @@ function register(body) {
         checkCredentialsReq(body);
     } catch (err) {
         // console.log("Error detected!")
-        return err.message
+        return { body: err.message, code: 10 };
     }
     // console.log(userExists(body.username))
     if (userExists(body.username)) {
-        return "User with given username already exists";
+        return { body: "User with given username already exists", code: 11 };
     }
     var shaPass = crypto.createHash("sha256").update(body.password).digest("hex")
     return addUser(body.username, shaPass)
@@ -20,20 +20,20 @@ function login(body) {
     try {
         checkCredentialsReq(body)
     } catch (err) {
-        return err.message
+        return { body: err.message, code: 10 };
     }
 
     if (!userExists(body.username)) {
-        return "Cannot login to non-existing account"
+        return { body: "Cannot login to non-existing account", code: 11 };
     }
     var shaPass = crypto.createHash("sha256").update(body.password).digest("hex")
-    var res = db.query('SELECT password_hash FROM accounts where username = (@username)', {username: body.username})
+    var res = db.query('SELECT password_hash FROM accounts where username = (@username)', { username: body.username })
     res = Object.values(res[0])[0]
     // console.log(res, " - ", shaPass, res === shaPass)
     if (res === shaPass) {
-        return "Correct credentials given - logging in..."
+        return { body: "Correct credentials given - logging in...", code: 0 }
     }
-    return "Incorrect password to given username"
+    return { body: "Incorrect password to given username", code: 12 };
 }
 
 function checkCredentialsReq(body) {
@@ -49,21 +49,21 @@ function checkCredentialsReq(body) {
 }
 
 function userExists(username) {
-    const res = db.query('SELECT count(username) FROM accounts where username = (@username)', {username})
+    const res = db.query('SELECT count(username) FROM accounts where username = (@username)', { username })
     // console.log(Object.values(res[0])[0])
     if (Object.values(res[0])[0]) {
-        return true
+        return true;
     }
-    return false
+    return false;
 }
 
 function addUser(username, hashPassword) {
-    const result = db.run('INSERT INTO accounts (username, password_hash, is_admin) VALUES (@username, @hashPassword, 0)', {username, hashPassword});
+    const result = db.run('INSERT INTO accounts (username, password_hash, is_admin) VALUES (@username, @hashPassword, 0)', { username, hashPassword });
     // console.log(result)
     if (result.changes == 1) {
-        return "Added user succesfully";
+        return { body: "Added user succesfully", code: 0 };
     }
-    return "Error with adding user to database"
+    return { body: "Error with adding user to database", code: 12 };
 }
 
 module.exports = {
