@@ -7,6 +7,15 @@ body {
   color: #2c3e50;
 }
 
+li {
+  list-style-type: none;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  color: #2c3e50;
+}
+
 nav {
   padding: 20px;
 }
@@ -16,9 +25,7 @@ nav h4 {
 }
 nav .links > a {
   font-weight: bold;
-  color: #2c3e50;
   margin: 0 5px;
-  text-decoration: none;
 }
 nav .links > a.router-link-exact-active {
   color: #42b983;
@@ -50,18 +57,13 @@ form button {
   padding: 10px 20px;
 }
 form button:hover {
-  background-color: rgb(87, 216, 87);
-}
-
-li {
-  list-style-type: none;
+  background-color: #57d857;
 }
 
 #card-holder {
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: aliceblue;
   min-width: 250px;
   max-width: 250px;
   min-height: 50px;
@@ -74,4 +76,46 @@ li {
   background-color: rgb(243, 41, 81);
   border-radius: 25px;
   padding: 2px 4px;
+}
+
+.product-single {
+  align-items: center;
+  display: grid;
+  grid-template: auto/200px 100px 100px auto 50px;
+  margin: 10px 20px;
+  padding: 20px;
+  background: linear-gradient(90deg, #57d857 23%, #42b983 100%);
+  border-radius: 25px;
+}
+.product-single h2,
+.product-single h4,
+.product-single p {
+  margin: 0;
+}
+.product-single.Dairy {
+  background: linear-gradient(90deg, rgb(240, 240, 240) 23%, rgb(213, 213, 213) 100%);
+}
+.product-single.Bakery {
+  background: linear-gradient(90deg, rgb(247, 187, 114) 23%, rgb(210, 107, 41) 100%);
+}
+.product-single.Meat {
+  background: linear-gradient(90deg, rgb(250, 220, 204) 23%, rgb(249, 197, 171) 100%);
+}
+.product-single.Beverages {
+  background: linear-gradient(90deg, rgb(184, 234, 252) 23%, rgb(123, 219, 254) 100%);
+}
+
+.route-enter-from {
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+.route-enter-active,
+.route-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.route-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
 }/*# sourceMappingURL=global.css.map */

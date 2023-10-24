@@ -4,7 +4,12 @@ export const useProductStore = defineStore("products", {
   state: () => {
     return {
       products: [],
-      product: null,
+      product: {
+        title: "",
+        category_name: "",
+        min_price: 0,
+        max_price: Infinity,
+      },
       loading: false,
       error: null,
     };

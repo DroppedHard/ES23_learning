@@ -32,18 +32,18 @@ export default {
     const userStore = useUserStore();
     // userStore.$reset();
     const router = useRouter();
-    const { username, password, response } = storeToRefs(userStore);
+    const { username, password, response, code } = storeToRefs(userStore);
     response.value = "";
     const submitForm = (e) => {
       e.preventDefault();
       // console.log(username.value, password.value);
-      userStore.login().then((res) => {
-        if (res === 0) {
-          response.value = "";
+      userStore.login().then(() => {
+        // console.log(res, code.value);
+        if (code.value === 0) {
+          response.value = null;
           router.push({ name: "home" });
         }
       });
-      // console.log(response.value);
     };
     return { username, password, submitForm, response };
   },

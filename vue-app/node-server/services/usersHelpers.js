@@ -1,6 +1,8 @@
 const crypto = require("crypto")
 const db = require('./db')
 
+let usersSession = {}
+
 function register(body) {
     try {
         checkCredentialsReq(body);
@@ -31,9 +33,25 @@ function login(body) {
     res = Object.values(res[0])[0]
     // console.log(res, " - ", shaPass, res === shaPass)
     if (res === shaPass) {
-        return { body: "Correct credentials given - logging in...", code: 0 }
+        createSession(body.username)
+        return { body: "Correct credentials given - logging in...", code: 0, sessionCounter: usersSession[body.username] }
     }
     return { body: "Incorrect password to given username", code: 12 };
+}
+
+function logout(body) {
+    if (!body) {
+        return { body: "No request body provided", code: 10 };
+    }
+    else if (!body.username) {
+        return { body: "Missing username in request body", code: 10 };
+    }
+
+    if (!userExists(body.username)) {
+        return { body: "Cannot login to non-existing account", code: 11 };
+    }
+    deleteSession(body.username)
+    return {body: "Logged out", code: 0 }
 }
 
 function checkCredentialsReq(body) {
@@ -66,7 +84,20 @@ function addUser(username, hashPassword) {
     return { body: "Error with adding user to database", code: 12 };
 }
 
+function createSession(username) { // template for start
+    if (!usersSession[username]) {
+        usersSession[username] = 1
+    } else {
+        usersSession[username]++
+    }
+}
+
+function deleteSession(username) {
+    usersSession[username] = undefined
+}
+
 module.exports = {
     register,
     login,
+    logout,
 }

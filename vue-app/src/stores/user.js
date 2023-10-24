@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axiosInstance from "./axiosInstance";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -7,6 +8,7 @@ export const useUserStore = defineStore("user", {
     password: null,
     password2: null,
     loggedAs: null,
+    sessionCounter: 0,
     loading: false,
     error: null,
     timeout: null,
@@ -20,29 +22,25 @@ export const useUserStore = defineStore("user", {
     async login() {
       this.loading = true;
       try {
-        return fetch("http://localhost:3000/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        return axiosInstance
+          .post("http://localhost:3000/users/login", {
             username: this.username,
             password: this.password,
-          }),
-        })
-          .then((res) => {
-            return res.json();
           })
           .then((res) => {
-            // console.log(res);
-            this.response = res.body;
-            this.code = res.code;
-            return res.code;
+            // console.log(res.data);
+            this.response = res.data.body;
+            this.code = res.data.code;
+            if (res.code === 0) {
+              this.loggedAs = this.username;
+              this.sessionCounter = res.data.sessionCounter;
+            }
           });
         // console.log(this.response);
       } catch (error) {
         this.error = error;
       } finally {
+        this.checkUserData();
         this.startTimeout();
         this.loading = false;
       }
@@ -50,24 +48,15 @@ export const useUserStore = defineStore("user", {
     async register() {
       this.loading = true;
       try {
-        return fetch("http://localhost:3000/users/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        return axiosInstance
+          .post("http://localhost:3000/users/register", {
             username: this.username,
             password: this.password,
-          }),
-        })
-          .then((res) => {
-            return res.json();
           })
           .then((res) => {
-            // console.log(res);
-            this.response = res.body;
-            this.code = res.code;
-            return res.code;
+            // console.log(res.data);
+            this.response = res.data.body;
+            this.code = res.data.code;
           });
         // console.log(this.response);
       } catch (error) {
@@ -82,6 +71,18 @@ export const useUserStore = defineStore("user", {
       this.timeout = setTimeout(() => {
         this.response = null;
       }, 3000);
+    },
+    async checkUserData() {
+      return axiosInstance
+        .get("/users/userdata")
+        .then((res) => {
+          // console.log("USER DATA", res);
+          this.loggedAs = res.data.user;
+          this.sessionCounter = res.data.sessionCounter;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
     },
   },
 });

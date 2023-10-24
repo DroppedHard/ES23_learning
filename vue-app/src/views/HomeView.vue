@@ -1,19 +1,18 @@
 <template>
-  <h1>Home</h1>
-  <ul>
-    <li v-for="product in products" :key="product.id">
-      <b>
-        {{ product.title }}
-      </b>
-      - {{ product.description }}
-    </li>
-  </ul>
+  <div>
+    <h1>Home</h1>
+    <ProductOverview
+      v-for="product in products"
+      :key="product.id"
+      :product="product"
+    />
+  </div>
 </template>
 
 <script>
-// import { storeToRefs } from "pinia";
 import { useProductStore } from "@/stores/products";
 import { storeToRefs } from "pinia";
+import ProductOverview from "@/components/ProductOverview.vue";
 
 export default {
   setup() {
@@ -22,6 +21,9 @@ export default {
     productStore.fetchProducts();
     // console.log(products);
     return { products };
+  },
+  components: {
+    ProductOverview,
   },
 };
 </script>

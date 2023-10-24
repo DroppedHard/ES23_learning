@@ -38,14 +38,15 @@ export default {
     const userStore = useUserStore();
     userStore.$reset();
     const router = useRouter();
-    const { username, password, password2, response } = storeToRefs(userStore);
+    const { username, password, password2, response, code } =
+      storeToRefs(userStore);
 
     const submitForm = async (e) => {
       e.preventDefault();
       if (password.value === password2.value) {
-        userStore.register().then((res) => {
+        userStore.register().then(() => {
           // console.log(res);
-          if (res === 0) {
+          if (code.value === 0) {
             response.value = null;
             router.push({ name: "login" });
           }

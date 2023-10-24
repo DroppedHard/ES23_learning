@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Character Limit Component</title>
+  </head>
+  <body>
+    <script>
+      class TextAreaWithLimit extends HTMLElement {
+        constructor() {
+          super();
+
+          this.attachShadow({ mode: "open" });
+          this.render();
+          this.textarea = this.shadowRoot.querySelector("textarea");
+          this.message = this.shadowRoot.querySelector(".message");
+          this.characterLimit = this.getAttribute("limit") || 100;
+
+          this.textarea.addEventListener("input", this.handleInput.bind(this));
+        }
+
+        handleInput() {
+          const currentValue = this.textarea.value;
+          if (currentValue.length > this.characterLimit) {
+            this.message.textContent = "Character limit exceeded!";
+            this.message.style.color = "red";
+          } else {
+            this.message.textContent = `${currentValue.length} / ${this.characterLimit}`;
+            this.message.style.color = "black";
+          }
+        }
+
+        render() {
+          this.shadowRoot.innerHTML = `
+<style>
+                    textarea {
+                        width: 100%;
+                        box-sizing: border-box;
+                        padding: 8px;
+                        resize: vertical;
+                    }
+
+ 
+
+                    .message {
+                        margin-top: 4px;
+                        font-size: 12px;
+                    }
+</style>
+<textarea rows="5"></textarea>
+<div class="message">0 / ${this.characterLimit}</div>
+            `;
+        }
+        static get observedAttributes() {
+            return ['limit']
+        }
+
+        attributeChangedCallback(property, oldValue, newValue) {
+            if (oldValue === newValue) return;
+            this[property] = newValue;
+            if (property == 'limit') {
+                this.characterLimit = newValue
+            }
+        }
+        connectedCallback() {
+            this.message.textContent = `0 / ${this.limit}`
+        }
+      }
+
+      customElements.define("text-area-limit", TextAreaWithLimit);
+    </script>
+
+    <text-area-limit limit="150"></text-area-limit>
+
+    <template id="hello-world">
+      <style>
+        p {
+          text-align: center;
+          font-weight: normal;
+          padding: 0.5em;
+          margin: 1px 0;
+          background-color: #eee;
+          border: 1px solid #666;
+        }
+      </style>
+
+      <p class="hw-text"></p>
+      <p class="hw-text"></p>
+      <p class="hw-text"></p>
+      <slot name="msgtext" class="hw-text"></slot>
+
+      <slot></slot>
+    </template>
+
+    <script>
+      class HelloWorld extends HTMLElement {
+        constructor() {
+          super();
+          this.name = "world";
+          const template = document
+            .getElementById("hello-world")
+            .content.cloneNode(true);
+        }
+        // connect component
+        connectedCallback() {
+          // this.textContent = `Hello ${this.name}!`;
+
+          // Adding template
+          //   const shadow = this.attachShadow({ mode: "closed" }),
+          //     template = document
+          //       .getElementById("hello-world")
+          //       .content.cloneNode(true),
+          //     hwMsg = `Hello ${this.name}`;
+
+          //   Array.from(template.querySelectorAll(".hw-text")).forEach(
+          //     (n) => (n.textContent = hwMsg)
+          //   );
+
+          //   shadow.append(template);
+
+          // Add slots to the template, if defined
+          const shadow = this.attachShadow({ mode: "closed" }),
+            hwMsg = `Hello ${this.name}`;
+
+          // append shadow DOM
+          shadow.append(
+            document.getElementById("hello-world").content.cloneNode(true)
+          );
+
+          // find all slots with a hw-text class
+          Array.from(shadow.querySelectorAll("slot.hw-text"))
+
+            // update first assignedNode in slot
+            .forEach((n) => (n.assignedNodes()[0].textContent = hwMsg));
+        }
+        static get observedAttributes() {
+          return ["name"];
+        }
+        attributeChangedCallback(property, oldValue, newValue) {
+          if (oldValue === newValue) return;
+          this[property] = newValue;
+        }
+      }
+      customElements.define("hello-world", HelloWorld);
+    </script>
+    <!-- <hello-world name="Random"></hello-world> -->
+    <hello-world name="Craig">
+      <h1 slot="msgtext">Hello Default!</h1>
+      <p>This text will become part of the component.</p>
+    </hello-world>
+  </body>
+</html>

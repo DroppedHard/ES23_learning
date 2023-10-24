@@ -1,5 +1,5 @@
 $main-color: #42b983;
-$accent-color: rgb(87, 216, 87);
+$accent-color: #57d857;
 $warn-color: rgb(243, 41, 81);
 $text-color: #2c3e50;
 
@@ -16,8 +16,15 @@ body {
     text-align: center;
     color: $text-color;
 }
-// #app {
-// }
+
+li {
+    list-style-type: none;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;
+    color: $text-color;
+}
 
 nav {
     padding: 20px;
@@ -29,9 +36,7 @@ nav {
 
     .links>a {
         font-weight: bold;
-        color: $text-color;
         margin: 0 5px;
-        text-decoration: none;
 
         &.router-link-exact-active {
             color: $main-color;
@@ -57,7 +62,7 @@ form {
         text-align: center;
         font-size: 1em;
     }
-    
+
     button {
         margin-top: 10px;
         border: none;
@@ -71,16 +76,10 @@ form {
     }
 }
 
-
-li {
-    list-style-type: none;
-}
-
 #card-holder {
     position: absolute;
     top: 5px;
     right: 5px;
-    background-color: aliceblue;
     min-width: 250px;
     max-width: 250px;
     min-height: 50px;
@@ -93,3 +92,52 @@ li {
     background-color: $warn-color;
     @include bigger-roundy(1);
 }
+
+.product-single {
+    align-items: center;
+    display: grid;
+    grid-template: auto / 200px 100px 100px auto 50px;
+    margin: 10px 20px;
+    padding: 20px;
+    background: linear-gradient(90deg,
+            $accent-color 23%,
+            $main-color 100%);
+    border-radius: 25px;
+
+    & h2,
+    h4,
+    p {
+        margin: 0;
+    }
+
+    &.Dairy {
+        background: linear-gradient(90deg, rgba(240, 240, 240, 1) 23%, rgba(213, 213, 213, 1) 100%);
+    }
+
+    &.Bakery {
+        background: linear-gradient(90deg, rgba(247, 187, 114, 1) 23%, rgba(210, 107, 41, 1) 100%);
+    }
+
+    &.Meat {
+        background: linear-gradient(90deg, rgba(250,220,204,1) 23%, rgba(249,197,171,1) 100%);
+    }
+
+    &.Beverages {
+        background: linear-gradient(90deg, rgba(184,234,252,1) 23%, rgba(123,219,254,1) 100%);
+    }
+}
+// Route animation on change
+.route-enter-from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  
+  .route-enter-active,
+  .route-leave-active {
+    transition: all 0.2s ease-out;
+  }
+  
+  .route-leave-to {
+    opacity: 0;
+    transform: translateY(100px);
+  }
